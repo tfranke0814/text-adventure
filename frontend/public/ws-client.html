@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>WS Test Client</title>
+    <style>
+      body {
+        font-family: Arial;
+        max-width: 800px;
+        margin: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>WebSocket Test Client</h1>
+    <p>Connects to <code>/ws</code> on the server.</p>
+    <div>
+      <label
+        >Server URL: <input id="url" value="ws://localhost:8080/ws" size="40"
+      /></label>
+      <button id="connect">Connect</button>
+      <button id="disconnect" disabled>Disconnect</button>
+    </div>
+    <div style="margin-top: 1rem">
+      <input id="message" placeholder="Message to send" size="50" />
+      <button id="send" disabled>Send</button>
+    </div>
+    <pre
+      id="log"
+      style="
+        background: #f6f8fa;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        height: 300px;
+        overflow: auto;
+      "
+    ></pre>
+
+    <script>
+      const connectBtn = document.getElementById("connect");
+      const disconnectBtn = document.getElementById("disconnect");
+      const sendBtn = document.getElementById("send");
+      const urlInput = document.getElementById("url");
+      const msgInput = document.getElementById("message");
+      const logEl = document.getElementById("log");
+      let ws = null;
+
+      function log(...args) {
+        logEl.textContent += args.join(" ") + "\n";
+        logEl.scrollTop = logEl.scrollHeight;
+      }
+
+      connectBtn.onclick = () => {
+        const url = urlInput.value;
+        ws = new WebSocket(url);
+        log("Connecting to", url);
+        ws.onopen = () => {
+          log("OPEN");
+          connectBtn.disabled = true;
+          disconnectBtn.disabled = false;
+          sendBtn.disabled = false;
+        };
+        ws.onmessage = (e) => log("RECV:", e.data);
+        ws.onclose = () => {
+          log("CLOSED");
+          connectBtn.disabled = false;
+          disconnectBtn.disabled = true;
+          sendBtn.disabled = true;
+        };
+        ws.onerror = (e) => log("ERROR", e && e.message);
+      };
+
+      disconnectBtn.onclick = () => {
+        if (ws) ws.close();
+      };
+      sendBtn.onclick = () => {
+        if (!ws || ws.readyState !== WebSocket.OPEN)
+          return log("Not connected");
+        ws.send(msgInput.value || "hello");
+      };
+    </script>
+  </body>
+</html>
