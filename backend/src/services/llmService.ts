@@ -1,11 +1,13 @@
-const config = require('../config/config');
 const OpenAI = require('openai');
+import type { Request, Response } from 'express';
+const config = require('../config/config');
+
 
 const client = new OpenAI();
 
-model = config.OPENAI_TEXT_MODEL;
+const model = config.OPENAI_TEXT_MODEL;
 
-async function generateTextStreamHttp(prompt, res) {
+async function generateTextStreamHttp(prompt: String, res: Response) :Promise<void> {
   const stream = await client.responses.create({
     model: model,
     input: [
@@ -26,7 +28,7 @@ async function generateTextStreamHttp(prompt, res) {
   console.debug('OPENAI stream complete (HTTP)')
 } 
 
-async function generateTextStreamWs(prompt, ws) {
+async function generateTextStreamWs(prompt: String, ws: WebSocket) {
   const stream = await client.responses.create({
     model: model,
     input: [

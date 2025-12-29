@@ -1,5 +1,6 @@
 // index.js API backend
 const express = require('express');
+import type { Request, Response } from 'express';
 const http = require('http');
 
 const config = require('./config/config');
@@ -15,7 +16,7 @@ const wss = initWebSockets(server);
 app.use(express.json());
 app.use('/api/llm', llmRoutes);
 
-app.get('/api/', (req, res) => {
+app.get('/api/', (req: Request, res: Response) => {
   res.json({ message: 'HTTP routes are operational' });
 });
 
