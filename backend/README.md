@@ -6,6 +6,7 @@ Quick start
 
 ```pwsh
 cd backend
+cp .env.example .env # Update env vars
 npm install
 ```
 

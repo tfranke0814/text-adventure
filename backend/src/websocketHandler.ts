@@ -1,10 +1,12 @@
 const WebSocket = require('ws');
+import type { WebSocket as Socket, WebSocketServer } from 'ws';
+import type { Server as HttpServer, IncomingMessage } from 'http'
 const { generateTextStreamWs } = require('./services/llmService');
 
-function initWebsockets(server) {
+function initWebsockets(server: HttpServer): WebSocketServer {
     const wss = new WebSocket.Server({ server, path: '/ws' });
 
-    wss.on('connection', (ws, req) => {
+    wss.on('connection', (ws: Socket, req: IncomingMessage) => {
         const remote = req && req.socket ? `${req.socket.remoteAddress}:${req.socket.remotePort}` : 'unknown';
         console.log('Client connected:', remote);
 
