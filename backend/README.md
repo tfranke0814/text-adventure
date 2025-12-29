@@ -15,7 +15,3 @@ npm install
 ```pwsh
 npm start
 ```
-
-```pwsh
-curl -X POST http://localhost:3000/api/broadcast -H "Content-Type: application/json" -d '{"message":"Hello WS clients"}'
-```
